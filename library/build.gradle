@@ -1,4 +1,19 @@
 apply plugin: 'com.android.library'
+apply plugin: 'de.hannesstruss.godot'
+//un comment when have real lib module to upload to jitpack
+apply plugin: 'com.github.dcendents.android-maven'
+
+
+def libVersionCode = 1
+def libVersionName = "1.0.0.0"
+
+//okay rest of the jitpack stuff for the local maven install to work correctly
+// uncomment next lines and change where appropriate
+def siteUrl = 'https://github.com/shareme/GWSJinn'
+def gitUrl = 'https://github.com/shareme/GWSJinn.git'
+group = "com.github.shareme"
+version = libVersionName
+
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
