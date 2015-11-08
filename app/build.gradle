@@ -74,6 +74,10 @@ def appVersionCode = advancedVersioning.versionCode
 
 android {
 
+    /*
+    Sets-up a sharedTest folder to store test code that can
+    be shared between test, androidTest, and androidTestMock
+     */
     sourceSets {
         String sharedTestDir = 'src/sharedTest/java'
         test {
@@ -231,7 +235,7 @@ android {
         }
         //so that we can do some design grid and design sketch overlays, etc
         design {
-
+           buildTypes.debug.applicationIdSuffix = '.design'
         }
     }
     // Remove mockRelease as it's not needed.
