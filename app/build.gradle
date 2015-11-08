@@ -7,6 +7,48 @@ apply plugin: 'view-inspector'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.fernandocejas.frodo'
 
+/*
+  App structure is using product flavors so that we can use one to mock our
+  stuff both on instrumented and on non-instrumented and dagger usage is assumed and
+  we have a design flavor to execute design overlays on to see designs workups
+  as we code the UI and show same back to the designers, ie:
+
+        src/
+           androidTest/
+                     java/
+                        com.github.shareme.gwsjinn
+
+           androidTestMock/
+                      java/
+                         com.github.shareme.gwsjinn
+
+           design/
+                 java/
+                     com.github.shareme.gwsjinn
+
+           main/
+                    java/
+                       com.github.shareme.gwsjinn
+
+           mock/
+                    java/
+                        com.github.shareme.gwsjinn
+
+           prod/
+                     java/
+                        com.github.shareme.gwsjinn
+
+           sharedTest/
+                     java/
+                        com.github.shareme.gwsjinn
+
+           test/
+                      java/
+                         com.github.shareme.gwsjinn
+
+
+ */
+
 
 
 advancedVersioning {
@@ -31,6 +73,21 @@ def appVersionCode = advancedVersioning.versionCode
 
 
 android {
+
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+        androidTestMock {
+            java.srcDir sharedTestDir
+        }
+    }
+
+
     def globalConfiguration = rootProject.extensions.getByName("ext")
 
     compileSdkVersion globalConfiguration.getAt("androidCompileSdkVersion")
@@ -41,22 +98,194 @@ android {
         applicationId globalConfiguration.getAt("androidApplicationId")
         minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
         targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+        versionName appVersionName
         testInstrumentationRunner globalConfiguration.getAt("testInstrumentationRunner")
         testApplicationId globalConfiguration.getAt("testApplicationId")
 
     }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError false
+        ignoreWarnings true
+        disable 'InvalidPackage'            //Some libraries have issues with this.
+        disable 'OldTargetApi'              //Lint gives this warning but SDK 20 would be Android L Beta.
+        disable 'IconDensities'             //For testing purpose. This is safe to remove.
+        disable 'IconMissingDensityFolder'  //For testing purpose. This is safe to remove.
+    }
+
+    aaptOptions {
+        noCompress 'txt'
+        ignoreAssetsPattern "!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }
+
+    signingConfigs {
+
+        //release {
+            //props stored in gradle.properties at userhome .gradle subfolder
+            // for product release and you just substitute the correct vars
+            // otherwise for demo of libs use what is listed
+
+            //storeFile file(FREDGROTT_RELEASE_STORE_FILE)
+            //storePassword FREDGROTT_RELEASE_STORE_PASSWORD
+            //keyAlias FREDGROTT_RELEASE_KEY_ALIAS
+            //keyPassword FREDGROTT_RELEASE_KEY_PASSWORD
+
+       // }
+
+        myDemo{
+            storeFile file('../buildsystem/demokey.jks')
+            storePassword 'droiddroid'
+            keyAlias 'dkey'
+            keyPassword 'droiddroid'
+        }
+
+    }
+
+
+    jacoco {
+        version = rootProject.ext.getAt("jacocoVersion")
+    }
+
+
     buildTypes {
-        release {
+
+        /*
+        We define some buildConfigField defs here to use
+         */
+        def BOOLEAN = "boolean"
+        def TRUE = "true"
+        def FALSE = "false"
+        def LOG_HTTP_REQUESTS = "LOG_HTTP_REQUESTS"
+        def REPORT_CRASHES = "REPORT_CRASHES"
+        def ENABLE_VIEW_SERVER = "ENABLE_VIEW_SERVER"
+        def ENABLE_SHARING = "ENABLE_SHARING"
+        def DEBUG_IMAGES = "DEBUG_IMAGES"
+
+
+        debug {
+            // Run code coverage reports by default on debug builds.
+            debuggable true
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testCoverageEnabled true
+            applicationIdSuffix '.dev'
+            versionNameSuffix '-dev'
+
+            buildConfigField BOOLEAN, LOG_HTTP_REQUESTS, TRUE
+            buildConfigField BOOLEAN, REPORT_CRASHES, FALSE
+            buildConfigField BOOLEAN, ENABLE_VIEW_SERVER, TRUE
+            buildConfigField BOOLEAN, ENABLE_SHARING, TRUE
+            buildConfigField BOOLEAN, DEBUG_IMAGES, TRUE
+
+
+        }
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-matches-android-optimize.pro'
+            //if its app demo of library than it gets
+            //signingConfig signingConfigs.myDemo
+            //other wise it gets an uncommented signingConfigs.release
+            //with the right product key pertaining to whether its on the Ci server or not
+            signingConfig signingConfigs.myDemo
+            applicationIdSuffix '.release'
+            versionNameSuffix '-release'
+
+            buildConfigField BOOLEAN, LOG_HTTP_REQUESTS, FALSE
+            buildConfigField BOOLEAN, REPORT_CRASHES, TRUE
+            buildConfigField BOOLEAN, ENABLE_VIEW_SERVER, FALSE
+            buildConfigField BOOLEAN, ENABLE_SHARING, FALSE
+            buildConfigField BOOLEAN, DEBUG_IMAGES, FALSE
+
+
+
         }
     }
+    // If you need to add more flavors, consider using flavor dimensions.
+    productFlavors {
+        mock {
+            //its suppose to be fixed in android gradle 1.4 with only
+            //needing to use applicationIdSuffix
+            buildTypes.debug.applicationIdSuffix = ".mock"
+        }
+        prod {
+
+        }
+        //so that we can do some design grid and design sketch overlays, etc
+        design {
+
+        }
+    }
+    // Remove mockRelease as it's not needed.
+    android.variantFilter { variant ->
+        if(variant.buildType.name.equals('release')
+                && variant.getFlavors().get(0).name.equals('mock')) {
+            variant.setIgnore(true);
+        }
+    }
+
+    // Always show the result of every unit test, even if it passes.
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
+
+
+
+
 }
+
+//noinspection GroovyMissingReturnStatement
+spoon {
+
+    debug = true
+
+    baseOutputDir = file("$rootProject.ext.ourReportsDir/spoon")
+
+    if (project.hasProperty('spoonClassName')) {
+        className = project.spoonClassName
+
+        if (project.hasProperty('spoonMethodName')) {
+            methodName = project.spoonMethodName
+        }
+    }
+
+}
+
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'
+}
+
+//uncomment to enable
+// androidTest gets a class named SystemAnimations and animations disabled and enabled within
+// the ApplicationTest setUp and tearDown
+// an AndroidManifest.xml stripped of its application tag is
+task grantAnimationPermission(type: Exec, dependsOn: 'installDebug') { // or install{productFlavour}{buildType}
+    commandLine "adb shell pm grant $android.defaultConfig.testApplicationId android.permission.SET_ANIMATION_SCALE".split(' ')
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('connectedAndroidTest')) {
+        task.dependsOn grantAnimationPermission
+    }
 }

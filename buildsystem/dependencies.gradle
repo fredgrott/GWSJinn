@@ -254,6 +254,7 @@ ext {
     gwsrippledecoviewVersion = '1.0.0.1'
     gwssystemuiVersion = '1.0.0.1'
     gwszdepthshadowVersion = '1.0.0.1'
+    madgeVersion = '1.1.2'
     picassoVersion = '2.5.2'
     telescopeVersion = '1.5.0'
     wizardVersion = '1.1.1'
@@ -272,6 +273,8 @@ ext {
             gwsrippledecoview:"com.github.shareme:GWSRippleDecoView:$gwsrippledecoviewVersion@aar",
             gwssystemui:"com.github.shareme:GWSSystemUI:$gwssystemuiVersion@aar",
             gwszdepthshadow:"com.github.shareme:GWSZDepthShadow:$gwszdepthshadowVersion@aar",
+            //debugCompile
+            madge: "com.jakewharton.madge:madge:$madgeVersion",
             telescope:"com.mattpreciious.telescope:telescope:$telescopeVersion@aar",
             wizard:"me.panavtec:wizard:$wizardVersion"
     ]

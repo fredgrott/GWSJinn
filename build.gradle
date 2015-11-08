@@ -39,6 +39,8 @@ buildscript {
 // google support libs being out-of-synch with support testing libs, etc.
 allprojects {
     ext{
+        //Configure stuff
+        ourReportsDir = '${project.buildDir}/reports'
         // we use a plugin to version libraries and applications and the versioning
         // policy is usually different for both the app and library modules
         // thus we define the versions per the plugin in each individual module
