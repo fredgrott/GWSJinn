@@ -1,4 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: 'buildsystem/ci.gradle'
+apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
     repositories {
@@ -12,9 +14,16 @@ buildscript {
     }
 }
 
+// dependencies.gradle also gets are allprojects adjustment blocks to adjust for
+// google support libs being out-of-synch with support testing libs, etc.
 allprojects {
-    repositories {
-        jcenter()
+    ext{
+        // we use a plugin to version libraries and applications and the versioning
+        // policy is usually different for both the app and library modules
+        // thus we define the versions per the plugin in each individual module
+        androidApplicationId = 'com.github.shareme.gwsjinn'
+        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+        testApplicationId = 'com.github.shareme.gwsjinn.test'
     }
 }
 
