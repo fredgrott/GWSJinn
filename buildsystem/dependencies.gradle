@@ -41,6 +41,14 @@ allprojects {
 }
 
 ext {
+
+    /*
+        Compute Date and time for reports, right from
+        Date example from Groovy JDK
+     */
+    buildTime = new Date().format("yyyy-MM-dd'T'HH:mm", TimeZone.getTimeZone("CST"))
+
+
     //android
     androidBuildToolsVersion = "23.0.2"
     androidMinSdkVersion = 16

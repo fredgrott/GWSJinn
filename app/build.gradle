@@ -57,6 +57,7 @@ advancedVersioning {
         versionBuild 0
     }
     codeOptions {
+        versionCodeType org.moallemi.gradle.internal.VersionCodeType.DATE
 
         dependsOnTasks 'release'
 
@@ -64,13 +65,14 @@ advancedVersioning {
     //if flavors than re use nameFormat to include the flavorName
     outputOptions {
         renameOutput true
-        nameFormat '$projectName-$appName-$buildType-$flavorName-$versionName'
+        nameFormat '$projectName-$appName-$buildType-$flavorName-$versionName-$versionCode'
 
     }
 }
 
 def appVersionName = advancedVersioning.versionName
 def appVersionCode = advancedVersioning.versionCode
+
 
 
 android {
@@ -199,6 +201,8 @@ android {
             buildConfigField BOOLEAN, ENABLE_VIEW_SERVER, TRUE
             buildConfigField BOOLEAN, ENABLE_SHARING, TRUE
             buildConfigField BOOLEAN, DEBUG_IMAGES, TRUE
+            buildConfigField "String", "BUILD_TIME", "\"${rootProject.ext.buildTime}\""
+
 
 
         }
