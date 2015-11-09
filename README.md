@@ -46,3 +46,24 @@ I have to implement, namely:
     -Probe plugin allows me intercept view methods and thus alloows me to debug views and layouts
     -Frodo plugin allows me to debug rxJava in that it allwos me to annotation trigger logging of Observables
      and Subscribers
+
+Okay, so now I detail the specific android libraries I am using that pertain to the android development
+work-flow:
+
+    -SpoonClient lib enables rest of spoon-gradle as far as getting screenshots automatically gnereated
+     for each device and emulator that executed tests
+    -GwsDroidInsUtil lib provides the rest of the turn off system animations during testing solution
+    -DBInspector lib allows me to look at the database files without needing to root a device
+    -LeakCanary allows me to diagnos memory leaks
+    -Timber allows me to keep debug logging staying in debug builds only
+    -GWSDroidViewServer allows me to use the android sdk Hierarchy tool to debug and inspect
+     the view groups and layout stuff
+    -GWSWakeUp library used to ake up devices when I push apps to test them
+    -Scalpel to assist in debugging layout layers, etc
+    -Madge library to debug of whether assets are drawing at their native resolutions
+
+
+And of course, to set-up an android application properly so that I get to coding the business logic and
+implementing the UI I need to use some specific libraries that set-up some boilerplate code covering everything
+from computing a proper Application User Universal ID for app tracking and app reports to bolireplate
+code to display a customized Eula for users.
