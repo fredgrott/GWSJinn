@@ -7,4 +7,42 @@ Implementation
 ==============
 
 The idea is to combine supplying the tools, libs, etc with setting up a developers work-flow that
-empowers the android developer.
+empowers the android developer and the team that android developer communicates with.
+
+Beginning with the top, I split out my dependencies and continuous-integration server set-up to separate
+gradle files at the root folder buildsystem and the code QA settings will be done the same way as it
+makes the resulting root build.gradle and module build gradle file easy to understand and read.
+
+If I need to apply a gradle plugin to the app module in different environments, for example genymotion plugin gets
+applied to app module on non-ci environment, than its also done as a gradle file snippet in this root folder.
+
+Some choose to abstract the layers of the application as a set of gradle project modules, I choose instead
+to implement that as names in packages instead due to the number of product flavors I am using to make it
+easier to track on application projects.
+
+Thus, given that with using dagger I have to have some gradle product Flavors already I add some to allow
+the implementation of:
+
+    -Mocking of instrumented testing(its a Google recommendations, ie best practices)
+    -A flavor that allows me to do design overlays, while debug does allow me to combine scalpel, madge,
+     and probe into a view type debug toolbar I still need to get feedback from non-programming designers
+     on the team and this flaovr helps do that.
+    -A sharedTest folder to share certain junit code between androidTest, androidTestMock, and test
+    -The release flaovr is labeled prod
+
+The set of gradle plugins helps me with the gradle work-flow and the android  development work-flow
+I have to implement, namely:
+
+    -Godot plugin allows me to fine-tune the gradle builds as far as performance
+    -Hugo plugin allows me to implement annotation-triggered method call logging in my debug builds
+    -Spoon-Gradle plugin allows me to use the spoon library to run and collect instrumented tests on
+     every device and emulator
+    -Apt plugin is needed for the new version of butterknife(version 8) and for dagger2 as it sets things
+     properly as far as the annotation processors
+    -AdvanceBuildVersioning plugin allows me to set policies on versioning both the app moduel and
+     library module artifacts automatically.
+    -AndroidMavenTasks plugin allows me to generate library module maven artifacts to allow me to
+     either upload to jcenter or deploy to jitpack
+    -Probe plugin allows me intercept view methods and thus alloows me to debug views and layouts
+    -Frodo plugin allows me to debug rxJava in that it allwos me to annotation trigger logging of Observables
+     and Subscribers

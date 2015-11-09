@@ -16,11 +16,18 @@ buildscript {
         //hugo plugin
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
         //spoon plugin
+        //to run all tests on all devices:
+        // gradle spoon
+        // at the command line
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.0.3'
         // in app modules
         // apply plugin: 'com.neenbedankt.android-apt'
         // need version 1.8 once butterknife is to 8.0.2 stable
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        // genymotion plugin needs applied at a buildsystem gradle snippet
+        // as we want it only applied when as far as the configuration
+        // in our non-ci server environments, unless we are using genymotion
+        //emulators from the ci-server
         //classpath 'com.genymotion:plugin:1.0'
         classpath 'org.moallemi.gradle.advanced-build-version:gradle-plugin:1.5.0'
         //maven tasks for android plugin, if you use jfrog than add that too as I use jitpack instead

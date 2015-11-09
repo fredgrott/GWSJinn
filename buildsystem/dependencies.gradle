@@ -113,6 +113,7 @@ ext {
     // remember to adjust allprojects block above per dep resolution strategy as
     // usually the android support annotations with espresso is usually out-of-synch with the
     // sdk
+    // all androidTestCompile
     instrumentedTestDependencies = [
             espressoContrib: "com.android.support.test.espresso:espresso-contrib:$espressoContribVersion",
             espressoCore: "com.android.support.test.espresso:espresso-core:$espressoCoreVersion",
