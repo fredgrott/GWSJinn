@@ -58,7 +58,7 @@ work-flow:
     -Timber allows me to keep debug logging staying in debug builds only
     -GWSDroidViewServer allows me to use the android sdk Hierarchy tool to debug and inspect
      the view groups and layout stuff
-    -GWSWakeUp library used to ake up devices when I push apps to test them
+    -GWSWakeUp library used to wake up devices when I push apps to test them
     -Scalpel to assist in debugging layout layers, etc
     -Madge library to debug of whether assets are drawing at their native resolutions
 
