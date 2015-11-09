@@ -3,7 +3,7 @@ apply plugin: 'de.hannesstruss.godot'
 apply plugin: 'hugo'
 apply plugin: 'spoon'
 apply plugin: 'org.moallemi.advanced-build-version'
-apply plugin: 'view-inspector'
+//apply plugin: 'org.licasr.probe'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.fernandocejas.frodo'
 
@@ -64,6 +64,7 @@ advancedVersioning {
     //if flavors than re use nameFormat to include the flavorName
     outputOptions {
         renameOutput true
+        nameFormat '$projectName-$appName-$buildType-$flavorName-$versionName'
 
     }
 }
@@ -244,6 +245,10 @@ android {
                 && variant.getFlavors().get(0).name.equals('mock')) {
             variant.setIgnore(true);
         }
+        if(variant.buildType.name.equals('release')
+               && variant.getFlavors().get(0).name.equals('design')){
+            variant.setIgnore(true);
+        }
     }
 
     // Always show the result of every unit test, even if it passes.
@@ -279,6 +284,13 @@ spoon {
 
 }
 
+//probe {
+    //buildVariants {
+    //    debug {
+      //      enabled = true
+        //}
+   // }
+//}
 
 
 dependencies {

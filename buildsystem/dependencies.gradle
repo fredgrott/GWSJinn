@@ -174,6 +174,8 @@ ext {
     timberVersion = '4.0.1'
     gwsdroidviewserverVersion = '1.0.0.1'
     gwswakeupVersion = '1.0.0.1'
+    scalpelVersion = '1.1.2'
+    madgeVersion = '1.1.2'
 
     debugAppDependencies = [
             //debugCompile
@@ -186,7 +188,11 @@ ext {
             //debugCompile, gets BuildConfig wrapped as far as method calls
             gwsdroidviewserver:"com.github.shareme:GWSDroidViewServer:$gwsdroidviewserverVersion@aar",
             //debugCompile, gets BuildConfig wrapped as far as method calls
-            gwswakeup:"com.github.shareme:GWSWakeUp:$gwswakeupVersion@aar"
+            gwswakeup:"com.github.shareme:GWSWakeUp:$gwswakeupVersion@aar",
+            //debugCompile
+            scalpel:"com.jakewharton.scalpel:scalpel:$scalpelVersion",
+            //debugCompile
+            madge: "com.jakewharton.madge:madge:$madgeVersion"
     ]
 
     debugLibraryDependencies = [
@@ -249,12 +255,19 @@ ext {
     androidtransformerVersion = '1.2'
     butterknifeVersion = '7.0.1'
     coordinatorVersion = '1.1.5'
+    gwsandroiduuidVersion = '1.0.0.1'
+    gwscoloursVersion = '1.0.0.1'
+    gwsdroidutilVersion = '1.0.0.1'
+    gwseasingVersion = '1.0.0.1'
+    gwseulaVersion = '1.0.0.1'
     gwsindiainkVersion = '1.0.0.1'
     gwsrevealVersion = '1.0.0.1'
     gwsrippledecoviewVersion = '1.0.0.1'
+    gwsrxbusVersion = '1.0.0.1'
+    gwsspannableVersion = '1.0.0.1'
     gwssystemuiVersion = '1.0.0.1'
     gwszdepthshadowVersion = '1.0.0.1'
-    madgeVersion = '1.1.2'
+
     picassoVersion = '2.5.2'
     telescopeVersion = '1.5.0'
     wizardVersion = '1.1.1'
@@ -268,13 +281,18 @@ ext {
             coordinator:"me.panavtec:coordinator:$coordinatorVersion",
             //apt
             coordinatorCompiler:"me.panavtec:coordinator-compiler:$coordinatorVersion",
+            gwsandroiduuid:"com.github.shareme:GWSAndroidUUID:$gwsandroiduuidVersion@aar",
+            gwscolours:"com.github.shareme:GWSColours:$gwscoloursVersion@aar",
+            gwsdroidutil:"com.github.shareme:GWSDroidUtil:$gwsdroidutilVersion@aar",
+            gwseasing:"com.github.shareme:GWSEasing:$gwseasingVersion@aar",
+            gwseula:"com.github.shareme:GWSEula:$gwseulaVersion@aar",
             gwsindiaink:"com.github.shareme:GWSIndiaInk:$gwsindiainkVersion@aar",
             gwsreveal:"com.github.shareme:GWSReveal:$gwsrevealVersion@aar",
             gwsrippledecoview:"com.github.shareme:GWSRippleDecoView:$gwsrippledecoviewVersion@aar",
+            gwsrxbus:"com.github.shareme:GWSRxBus:$gwsrxbusVersion@aar",
+            gwsspannable:"com.github.shareme:GWSSpannable:$gwsspannableVersion@aar",
             gwssystemui:"com.github.shareme:GWSSystemUI:$gwssystemuiVersion@aar",
             gwszdepthshadow:"com.github.shareme:GWSZDepthShadow:$gwszdepthshadowVersion@aar",
-            //debugCompile
-            madge: "com.jakewharton.madge:madge:$madgeVersion",
             telescope:"com.mattpreciious.telescope:telescope:$telescopeVersion@aar",
             wizard:"me.panavtec:wizard:$wizardVersion"
     ]
