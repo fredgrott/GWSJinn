@@ -7,6 +7,8 @@ apply plugin: 'org.moallemi.advanced-build-version'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.fernandocejas.frodo'
 
+
+
 /*
   App structure is using product flavors so that we can use one to mock our
   stuff both on instrumented and on non-instrumented and dagger usage is assumed and
@@ -23,6 +25,10 @@ apply plugin: 'com.fernandocejas.frodo'
                          com.github.shareme.gwsjinn
 
            design/
+                 java/
+                     com.github.shareme.gwsjinn
+
+           data/
                  java/
                      com.github.shareme.gwsjinn
 
@@ -45,6 +51,9 @@ apply plugin: 'com.fernandocejas.frodo'
            test/
                       java/
                          com.github.shareme.gwsjinn
+           view/
+                      java/
+                          com.github.shareme.gwsjinn
 
 
  */
@@ -72,6 +81,21 @@ advancedVersioning {
 
 def appVersionName = advancedVersioning.versionName
 def appVersionCode = advancedVersioning.versionCode
+
+/*
+ We define some buildConfigField defs here to use
+ */
+def BOOLEAN = "boolean"
+def TRUE = "true"
+def FALSE = "false"
+def LOG_HTTP_REQUESTS = "LOG_HTTP_REQUESTS"
+def REPORT_CRASHES = "REPORT_CRASHES"
+def ENABLE_VIEW_SERVER = "ENABLE_VIEW_SERVER"
+def ENABLE_SHARING = "ENABLE_SHARING"
+
+def DEBUG_VIEW = "DEBUG_VIEW"
+def DEBUG_DATA = "DEBUG_DATA"
+def DEBUG_DESIGN = 'DEBUG_DESIGN'
 
 
 
@@ -175,17 +199,7 @@ android {
 
     buildTypes {
 
-        /*
-        We define some buildConfigField defs here to use
-         */
-        def BOOLEAN = "boolean"
-        def TRUE = "true"
-        def FALSE = "false"
-        def LOG_HTTP_REQUESTS = "LOG_HTTP_REQUESTS"
-        def REPORT_CRASHES = "REPORT_CRASHES"
-        def ENABLE_VIEW_SERVER = "ENABLE_VIEW_SERVER"
-        def ENABLE_SHARING = "ENABLE_SHARING"
-        def DEBUG_IMAGES = "DEBUG_IMAGES"
+
 
 
         debug {
@@ -200,7 +214,7 @@ android {
             buildConfigField BOOLEAN, REPORT_CRASHES, FALSE
             buildConfigField BOOLEAN, ENABLE_VIEW_SERVER, TRUE
             buildConfigField BOOLEAN, ENABLE_SHARING, TRUE
-            buildConfigField BOOLEAN, DEBUG_IMAGES, TRUE
+
             buildConfigField "String", "BUILD_TIME", "\"${rootProject.ext.buildTime}\""
 
 
@@ -222,25 +236,52 @@ android {
             buildConfigField BOOLEAN, REPORT_CRASHES, TRUE
             buildConfigField BOOLEAN, ENABLE_VIEW_SERVER, FALSE
             buildConfigField BOOLEAN, ENABLE_SHARING, FALSE
-            buildConfigField BOOLEAN, DEBUG_IMAGES, FALSE
+
 
 
 
         }
     }
-    // If you need to add more flavors, consider using flavor dimensions.
+    /*
+    Data, Design, and View product flavors get certain debug libraries loaded
+    via their debugProductFlavorCompile dep entries to enable a specific
+    debug tool bar that only shows for that product flavor when run on emulator
+    or device.
+     */
     productFlavors {
+        /*
+        Enables mocking during instrument testing
+         */
         mock {
             //its suppose to be fixed in android gradle 1.4 with only
             //needing to use applicationIdSuffix
             buildTypes.debug.applicationIdSuffix = ".mock"
         }
+        /*
+        This is the main point for the android dev as prodDebug and prodRelease
+        as far as how builds flow through with mock on mock and different debugging
+        scopes on the appropriate product flavors
+         */
         prod {
 
         }
         //so that we can do some design grid and design sketch overlays, etc
         design {
            buildTypes.debug.applicationIdSuffix = '.design'
+            buildConfigField BOOLEAN, DEBUG_DESIGN, TRUE
+            // design apk gets distributed to design staff for feedback on
+            // UI design progress, etc thus we need to sign with
+            // demo key so that its easier to load in devices
+            // for design staff
+            signingConfig signingConfigs.myDemo
+        }
+        data {
+
+            buildConfigField BOOLEAN, DEBUG_DATA, TRUE
+        }
+        view {
+
+            buildConfigField BOOLEAN, DEBUG_VIEW, TRUE
         }
     }
     // Remove mockRelease as it's not needed.
@@ -251,6 +292,14 @@ android {
         }
         if(variant.buildType.name.equals('release')
                && variant.getFlavors().get(0).name.equals('design')){
+            variant.setIgnore(true);
+        }
+        if(variant.buildType.name.equals('release')
+               && variant.getFlavors().get(0).name.equals('data')){
+            variant.setIgnore(true);
+        }
+        if(variant.buildType.name.equals('release')
+               && variant.getFlavors().get(0).name.equals('view')){
             variant.setIgnore(true);
         }
     }

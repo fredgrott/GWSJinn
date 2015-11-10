@@ -216,8 +216,12 @@ ext {
     sqlbriteVersion = '0.4.0'
     reactivelocationVersion = '0.8'
     rxpreferencesVersion = '1.0.0'
+    //proguard settings for rxjava
+    proguardrulesVersion = '1.0.14.2'
 
     rxjavaDependencies = [
+
+            proguardrules:"com.artemzin.rxjava:proguard-rules:$proguardrulesVersion",
             rxandroid: "io.reactivex:rxandroid:$rxandroidVersion",
             rxjava:"io.reactivex:rxjava:$rxjavaVersion",
             rxbinding:"com.jakewharton.rxbinding:rxbinding:$rxbindingVersion",

@@ -30,6 +30,11 @@ the implementation of:
     -A sharedTest folder to share certain junit code between androidTest, androidTestMock, and test
     -The release flaovr is labeled prod
 
+I use several gradle product flavors to assist me in enabling certain debug tools that are specific for
+data debugging, view and layout debugging, and design feedback with design staff. The code used is soft forks of
+other 3rd party efforts but they did not see the advantage of being able to turn it off and on via their
+implementation so one could enable it on a per gradle product flavor basis, they lacked vision!
+
 The set of gradle plugins helps me with the gradle work-flow and the android  development work-flow
 I have to implement, namely:
 
