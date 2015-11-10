@@ -3,7 +3,7 @@ apply plugin: 'de.hannesstruss.godot'
 apply plugin: 'hugo'
 apply plugin: 'spoon'
 apply plugin: 'org.moallemi.advanced-build-version'
-//apply plugin: 'org.licasr.probe'
+apply plugin: 'org.lucasr.probe'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.fernandocejas.frodo'
 
@@ -337,13 +337,13 @@ spoon {
 
 }
 
-//probe {
-    //buildVariants {
-    //    debug {
-      //      enabled = true
-        //}
-   // }
-//}
+probe {
+    buildVariants {
+        debug {
+            enabled = true
+        }
+    }
+}
 
 
 dependencies {
@@ -351,8 +351,8 @@ dependencies {
 
     testCompile rootProject.ext.acceptanceTestingDependencies.junit
     testCompile rootProject.ext.acceptanceTestingDependencies.mockito
-    //testCompile rootProject.ext.acceptanceTestingDependencies.powermockJunit
-    //testCompile rootProject.ext.acceptanceTestingDependencies.powermockMockito
+    testCompile rootProject.ext.acceptanceTestingDependencies.powermockJunit
+    testCompile rootProject.ext.acceptanceTestingDependencies.powermockMockito
     testCompile rootProject.ext.acceptanceTestingDependencies.assertjCore
 
     androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoRunner
@@ -377,25 +377,25 @@ dependencies {
     compile rootProject.ext.debugAppDependencies.leakcanaryAndroidNOOPRC
 
     debugCompile rootProject.ext.debugAppDependencies.leakcanaryAndroidDC
-    //debugCompile rootProject.ext.debugAppDependencies.dbinspector
+    debugCompile rootProject.ext.debugAppDependencies.dbinspector
     debugCompile rootProject.ext.debugAppDependencies.gwsdroidviewserver
     //debugCompile rootProject.ext.debugAppDependencies.gwswakeup
 
-    //apt rootProject.ext.lombokDependencies.lombok
+    apt rootProject.ext.lombokDependencies.lombok
 
-    //compile rootProject.ext.daggerDependencies.daggerCore
-    //apt rootProjecct.ext.daggerDependencies.daggerCompiler
-    //apt rootProject.ext.daggerDependencies.javaxJsr250
+    compile rootProject.ext.daggerDependencies.daggerCore
+    apt rootProject.ext.daggerDependencies.daggerCompiler
+    apt rootProject.ext.daggerDependencies.javaxJsr250
 
-    //compile rootProject.ext.rxjavaDependencies.rxjava
-    //compile rootProject.ext.rxjavaDependencies.rxandroid
-    //compile rootProject.ext.rxjavaDependencies.rxbinding
-    //compile rootProject.ext.rxjavaDependencies.rxbindingSupportFour
-    //compile rootProject.ext.rxjavaDependencies.rxbindingAppCompat
-    //compile rootProject.ext.rxjavaDependencies.rxlifecycle
-    //compile rootProject.ext.rxjavaDependencies.rxlifecycleComponents
-    //compile rootProject.ext.rxjavaDependencies.proguardrules
-    //compile rootProject.ext.thirdPartyDependencies.gwsrxbus
+    compile rootProject.ext.rxjavaDependencies.rxjava
+    compile rootProject.ext.rxjavaDependencies.rxandroid
+    compile rootProject.ext.rxjavaDependencies.rxbinding
+    compile rootProject.ext.rxjavaDependencies.rxbindingSupportFour
+    compile rootProject.ext.rxjavaDependencies.rxbindingAppCompat
+    compile rootProject.ext.rxjavaDependencies.rxlifecycle
+    compile rootProject.ext.rxjavaDependencies.rxlifecycleComponents
+    compile rootProject.ext.rxjavaDependencies.proguardrules
+    compile rootProject.ext.thirdPartyDependencies.gwsrxbus
 
 
 

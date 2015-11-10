@@ -76,8 +76,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile rootProject.ext.acceptanceTestingDependencies.junit
     testCompile rootProject.ext.acceptanceTestingDependencies.mockito
-    //testCompile rootProject.ext.acceptanceTestingDependencies.powermockJunit
-    //testCompile rootProject.ext.acceptanceTestingDependencies.powermockMockito
+    testCompile rootProject.ext.acceptanceTestingDependencies.powermockJunit
+    testCompile rootProject.ext.acceptanceTestingDependencies.powermockMockito
     testCompile rootProject.ext.acceptanceTestingDependencies.assertjCore
 
     androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoRunner

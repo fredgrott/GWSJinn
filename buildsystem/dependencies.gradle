@@ -85,14 +85,14 @@ ext {
     //acceptance testing libs
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
-    powermockVersion = '1.6.2'
+    powermockVersion = '1.6.3'
     assertjJunitVersion = '2.2.0'
 
     acceptanceTestingDependencies = [
             //hamcrest comes with junit
             junit: "junit:junit:$junitVersion",
             //why all?
-            mockito: "org.mockito:mockito-core:$mockitoVersion",
+            mockito: "org.mockito:mockito-all:$mockitoVersion",
             powermockJunit:"org.powermock:powermock-module-junit4:$powermockVersion",
             powermockMockito: "org.powermock:powermock-api-mockito:$powermockVersion",
             assertjCore:"org.assertj:assertj-core:$assertjJunitVersion"
@@ -259,7 +259,7 @@ ext {
 
     daggerDependencies = [
             //compile
-            daggerCore: "com.google.dagger:dager:$daggerVersion",
+            daggerCore: "com.google.dagger:dagger:$daggerVersion",
             //apt
             daggerCompiler:"com.google.dagger:dagger-compiler:$daggerVersion",
             //apt
