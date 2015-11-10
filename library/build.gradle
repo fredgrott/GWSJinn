@@ -74,8 +74,25 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.0'
+    testCompile rootProject.ext.acceptanceTestingDependencies.junit
+    testCompile rootProject.ext.acceptanceTestingDependencies.mockito
+    //testCompile rootProject.ext.acceptanceTestingDependencies.powermockJunit
+    //testCompile rootProject.ext.acceptanceTestingDependencies.powermockMockito
+    testCompile rootProject.ext.acceptanceTestingDependencies.assertjCore
+
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoRunner
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoRules
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoCore
+    androidTestCompile (rootProject.ext.instrumentedTestDependencies.espressoContrib){
+        exclude module: 'recyclerview-v7'
+        exclude module: 'support-v4'
+
+    }
+    androidTestCompile (rootProject.ext.instrumentedTestDependencies.assertjAndroid){
+        exclude group: 'com.android.support'
+    }
+    compile rootProject.ext.androidSupportDependencies.appCompat
+    compile rootProject.ext.debugAppDependencies.timber
 }
 install {
     repositories.mavenInstaller{
