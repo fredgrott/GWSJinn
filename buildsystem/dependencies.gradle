@@ -89,9 +89,12 @@ ext {
     assertjJunitVersion = '2.2.0'
 
     acceptanceTestingDependencies = [
+            //hamcrest comes with junit
             junit: "junit:junit:$junitVersion",
+            //why all?
             mockito: "org.mockito:mockito-core:$mockitoVersion",
-            powermock: "org.powermock:powermock-api-mockito:$powermockVersion",
+            powermockJunit:"org.powermock:powermock-module-junit4:$powermockVersion",
+            powermockMockito: "org.powermock:powermock-api-mockito:$powermockVersion",
             assertjCore:"org.assertj:assertj-core:$assertjJunitVersion"
     ]
 
@@ -193,7 +196,7 @@ ext {
             leakcanaryAndroidNOOPRC: "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion",
             timber:"com.jakewharton.timber:timber:$timberVersion",
             //debugCompile
-            dbinspector: "imi.dino:dbinspector:$dbinspectorVersion@aar",
+            dbinspector: "im.dino:dbinspector:$dbinspectorVersion@aar",
             //debugCompile, gets BuildConfig wrapped as far as method calls
             gwsdroidviewserver:"com.github.shareme:GWSDroidViewServer:$gwsdroidviewserverVersion@aar",
             //debugCompile, gets BuildConfig wrapped as far as method calls

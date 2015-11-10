@@ -348,8 +348,58 @@ spoon {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.0'
+
+    testCompile rootProject.ext.acceptanceTestingDependencies.junit
+    testCompile rootProject.ext.acceptanceTestingDependencies.mockito
+    //testCompile rootProject.ext.acceptanceTestingDependencies.powermockJunit
+    //testCompile rootProject.ext.acceptanceTestingDependencies.powermockMockito
+    testCompile rootProject.ext.acceptanceTestingDependencies.assertjCore
+
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoRunner
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoRules
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoCore
+    androidTestCompile (rootProject.ext.instrumentedTestDependencies.espressoContrib){
+        exclude module: 'recyclerview-v7'
+        exclude module: 'support-v4'
+
+    }
+    androidTestCompile (rootProject.ext.instrumentedTestDependencies.assertjAndroid){
+        exclude group: 'com.android.support'
+    }
+    androidTestCompile (rootProject.ext.instrumentedTestDependencies.assertjAppCompat){
+        exclude group: 'com.android.support'
+    }
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.spoonClient
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.gwsdroidinsutil
+
+    compile rootProject.ext.androidSupportDependencies.appCompat
+    compile rootProject.ext.debugAppDependencies.timber
+    compile rootProject.ext.debugAppDependencies.leakcanaryAndroidNOOPRC
+
+    debugCompile rootProject.ext.debugAppDependencies.leakcanaryAndroidDC
+    //debugCompile rootProject.ext.debugAppDependencies.dbinspector
+    debugCompile rootProject.ext.debugAppDependencies.gwsdroidviewserver
+    //debugCompile rootProject.ext.debugAppDependencies.gwswakeup
+
+    //apt rootProject.ext.lombokDependencies.lombok
+
+    //compile rootProject.ext.daggerDependencies.daggerCore
+    //apt rootProjecct.ext.daggerDependencies.daggerCompiler
+    //apt rootProject.ext.daggerDependencies.javaxJsr250
+
+    //compile rootProject.ext.rxjavaDependencies.rxjava
+    //compile rootProject.ext.rxjavaDependencies.rxandroid
+    //compile rootProject.ext.rxjavaDependencies.rxbinding
+    //compile rootProject.ext.rxjavaDependencies.rxbindingSupportFour
+    //compile rootProject.ext.rxjavaDependencies.rxbindingAppCompat
+    //compile rootProject.ext.rxjavaDependencies.rxlifecycle
+    //compile rootProject.ext.rxjavaDependencies.rxlifecycleComponents
+    //compile rootProject.ext.rxjavaDependencies.proguardrules
+    //compile rootProject.ext.thirdPartyDependencies.gwsrxbus
+
+
+
+
 }
 
 //uncomment to enable
