@@ -221,6 +221,10 @@ android {
 
         }
 
+        /*
+        Just for the probe views and layout and transverse tool and I limit its
+        use to just the view product flavor
+         */
         probedebug.initWith(buildTypes.debug)
         probedebug{
 
