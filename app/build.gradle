@@ -221,6 +221,11 @@ android {
 
         }
 
+        probedebug.initWith(buildTypes.debug)
+        probedebug{
+
+        }
+
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-matches-android-optimize.pro'
@@ -302,6 +307,22 @@ android {
                && variant.getFlavors().get(0).name.equals('view')){
             variant.setIgnore(true);
         }
+        if(variant.buildType.name.equals('probedebug')
+                 && variant.getFlavors().get(0).name.equals('mock')){
+            variant.setIgnore(true);
+        }
+        if(variant.buildType.name.equals('probedebug')
+                && variant.getFlavors().get(0).name.equals('design')){
+            variant.setIgnore(true);
+        }
+        if(variant.buildType.name.equals('probedebug')
+                 && variant.getFlavors().get(0).name.equals('data')){
+            variant.setIgnore(true);
+        }
+        if(variant.buildType.name.equals('probedebug')
+                && variant.getFlavors().get(0).name.equals('prod')){
+            variant.setIgnore(true);
+        }
     }
 
     // Always show the result of every unit test, even if it passes.
@@ -339,7 +360,7 @@ spoon {
 
 probe {
     buildVariants {
-        debug {
+        probedebug {
             enabled = true
         }
     }
