@@ -243,7 +243,7 @@ ext {
 
     //lombok libs as we only use lombok on the app side not the library side at the
     //moment and that can change
-    lombokVersion = '1.12.6'
+    lombokVersion = '1.16.6'
 
     //remember that we need do a delombok task to adjust the javadocs and need the
     //lombok jar in folder other than libs os that its not picked-up as a compile dep.
