@@ -407,6 +407,7 @@ dependencies {
     //debugCompile rootProject.ext.debugAppDependencies.gwswakeup
 
     apt rootProject.ext.lombokDependencies.lombok
+    provided rootProject.ext.lombokDependencies.lombok
 
     compile rootProject.ext.daggerDependencies.daggerCore
     apt rootProject.ext.daggerDependencies.daggerCompiler

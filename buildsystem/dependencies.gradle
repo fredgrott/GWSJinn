@@ -248,7 +248,7 @@ ext {
     //remember that we need do a delombok task to adjust the javadocs and need the
     //lombok jar in folder other than libs os that its not picked-up as a compile dep.
     lombokDependencies = [
-            //provided
+            //provided and apt both
            lombok:"org.projectlombok:lombok:$lombokVersion"
     ]
 
