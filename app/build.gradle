@@ -484,3 +484,37 @@ def findClasses(File path)
  In our javadoc for loombok we only want android.applicationVariants the prod
  gradle product flavour only and only the release build type
  */
+android.applicationVariants.all { variant ->
+      if(variant.buildType.name.equals('release')
+          && variant.name.contains('prod')){
+          task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+              description "Generates Javadoc for $variant.name."
+
+              setDependsOn(['build', 'delombok'])
+              source = srcDelomboked
+              ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+              classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+
+              List<String> jars = new ArrayList<String>();
+              File dependencies = new File("build/intermediates/exploded-aar/")
+              for (File folder : dependencies.listFiles())
+              {
+                  List<File> found = findClasses(folder);
+                  for (File foundFile : found)
+                  {
+                      classpath += files(foundFile.getAbsolutePath())
+                  }
+              }
+
+
+              options.links("http://docs.oracle.com/javase/7/docs/api/");
+              options.linksOffline("http://d.android.com/reference", "${android.sdkDirectory}/docs/reference");
+
+              // exclude generated files
+              exclude '**/BuildConfig.java'
+              exclude '**/R.java'
+
+
+          }
+      }
+}

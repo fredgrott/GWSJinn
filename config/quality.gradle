@@ -1,0 +1,21 @@
+/*
+ Copyright (C) 2015 Fred Grott(aka shareme GrottWorkShop)
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is
+distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under License.
+ */
+//apply plugin: 'checkstyle'
+//apply plugin: 'findbugs'
+//apply plugin: 'pmd'
+
+/*
+Note: App module has product flavors and the library module doe not have any product flavors.
+      Thus, we need to check for the specific android app or library plugin and deliver the appropriate
+      android block to denote the qa plugin configuration and the task
+ */
