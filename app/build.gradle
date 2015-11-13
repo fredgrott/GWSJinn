@@ -7,56 +7,94 @@ apply plugin: 'org.lucasr.probe'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.fernandocejas.frodo'
 
-
-
 /*
-  App structure is using product flavors so that we can use one to mock our
-  stuff both on instrumented and on non-instrumented and dagger usage is assumed and
-  we have a design flavor to execute design overlays on to see designs workups
-  as we code the UI and show same back to the designers, ie:
+  Our app structure is derived from a mix of gradle product flavors, build types, and
+  default variants and TestVariants added by the gradle android plugin.
 
-        src/
-           androidTest/
-                     java/
-                        com.github.shareme.gwsjinn
+         buildTypes:
+                debug
+                probedebug
+                release
 
-           androidTestMock/
-                      java/
-                         com.github.shareme.gwsjinn
+         productFlavors
+                data
+                design
+                mock
+                prod
+                view
 
-           design/
-                 java/
-                     com.github.shareme.gwsjinn
+         gradleAndroidPluginDefaults:
+                sourceSets:
+                     androidTest
+                     main
+                     test
+                buildTypes:
+                     debug
+                     release
+                testVariant:
+                     androidTest(androidTestDebug)
 
-           data/
-                 java/
-                     com.github.shareme.gwsjinn
+         possible instrumented test matrix:
+                 androidTest
+                 androidTestData
+                 androidTestDesign
+                 androidTestMock
+                 androidTestProd
+                 androidTestView
 
-           main/
-                    java/
-                       com.github.shareme.gwsjinn
+            Note that the IDE is set to run  androidTestProductName
+            of the build variant selected which includes our product
+            flavor name. Hence we execute from the prod build variant
+            derivative as debug gives us androidTestProd, etc.
 
-           mock/
-                    java/
-                        com.github.shareme.gwsjinn
+         actual instrumented test matrix enforced by filtering and not calling
+         certain tasks:
+                 androidTest
+                 androidTestMock
+                 androidTestProd
 
-           prod/
-                     java/
-                        com.github.shareme.gwsjinn
+         actual sourceSets:
+                androidTest
+                androidTestMock
+                androidTestProd
+                data
+                debug
+                design
+                main
+                mock
+                prod
+                sharedTest
+                test
+                view
 
-           sharedTest/
-                     java/
-                        com.github.shareme.gwsjinn
+         despite in imperfections of variant filtering our Spoon instrumented
+         tasks that we need to execute for testing are:
+                spoonProd
+                spoonMock
 
-           test/
-                      java/
-                         com.github.shareme.gwsjinn
-           view/
-                      java/
-                          com.github.shareme.gwsjinn
+    Summary:
+
+         IDE:
+             Main debug build runs with all tests:
+                       prodDebug
+                       mockDebug
+             Main release build run:
+                       prodRelease
+             Main feature debugging view other product flavors,
+             using some tool accessories:
+                       dataDebug
+                       designDebug
+                       viewDebug
+
+          CI And Or CommandLine:
+                       spoonProd
+                       spoonMock
+
+
 
 
  */
+
 
 
 
@@ -302,7 +340,12 @@ android {
             buildConfigField BOOLEAN, DEBUG_VIEW, TRUE
         }
     }
-    // Remove mockRelease as it's not needed.
+    /*
+    Note, that we run all our instrumented tests using Spoon so we have a
+    testVariant for every product flavor but do not always rung instrumented
+    tests for every product flavor:
+
+     */
     android.variantFilter { variant ->
         if(variant.buildType.name.equals('release')
                 && variant.getFlavors().get(0).name.equals('mock')) {

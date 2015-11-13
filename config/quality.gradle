@@ -46,6 +46,7 @@ Note: App module has product flavors and the library module doe not have any pro
 //        checkstyle 'com.puppycrawl.tools:checkstyle:6.12.1'
 //        findbugs 'com.google.code.findbugs:findbugs:3.0.1'
 //        compile 'com.google.code.findbugs:annotations:3.0.1'
+//        compile 'com.google.code.findbugs:jsr305:3.0.1'
 //        javaNCSS 'org.codehaus.javancss:javancss:33.54'
 //        jdepend 'jdepend:jdepend:2.9.1'
 //        jdepend 'org.apache.ant:ant-jdepend:1.9.0'
@@ -121,7 +122,8 @@ Note: App module has product flavors and the library module doe not have any pro
 //    }
 //
 //    task jdepend(type: JDepend, group: 'Verification',
-//                       description: 'computes oop relationships'){
+//                       description: 'computes oop relationships',
+//                      dependsOn: ['compileDebugSources','compileReleaseSources']){
 //           toolVersion = '2.9.1'
 //           source 'src'
 //           include '**/*.java'
