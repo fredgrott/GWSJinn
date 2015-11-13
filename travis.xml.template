@@ -90,6 +90,6 @@ script:
   #      OR
   #    ./gradlew spoonMock
   # with library module its
-  # ./gradlew
+  # ./gradlew build
   - ./gradlew spoon
 
