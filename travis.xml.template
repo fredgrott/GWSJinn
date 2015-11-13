@@ -85,5 +85,11 @@ os:
 
 script:
   # so we have the spoon stuff integrated with the test running
+  # with app module:
+  #   ./gradlew spoonProd
+  #      OR
+  #    ./gradlew spoonMock
+  # with library module its
+  # ./gradlew
   - ./gradlew spoon
 
