@@ -161,6 +161,11 @@ android {
         quiet true
         abortOnError false
         ignoreWarnings true
+        xmlReport false
+        htmlReport true
+        lintConfig file("${project.rootDir}/config/quality/androidlint/lint.xml")
+        htmlOutput file("${project.buildDir}/reports/lint/lint-results.html")
+        xmlOutput file("${rootProject.buildDir}/reports/lint/lint-results.xml")
         disable 'InvalidPackage'            //Some libraries have issues with this.
         disable 'OldTargetApi'              //Lint gives this warning but SDK 20 would be Android L Beta.
         disable 'IconDensities'             //For testing purpose. This is safe to remove.
