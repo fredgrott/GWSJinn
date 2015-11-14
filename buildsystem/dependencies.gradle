@@ -325,5 +325,15 @@ ext {
             wizard:"me.panavtec:wizard:$wizardVersion"
     ]
 
+    //retrofit deps
+    retrofitVersion = '2.0.0-beta2'
+
+    retrofitDeps = [
+            retrofit:"com.squareup.retrofit:retrofit:$retrofitVersion",
+            retrofitmock:"com.squareup.retrofit:retrofit-mock:$retrofitVersion",
+            retrofitrxjavamock:"com.squareup.retrofit:adapater-rxjava-mock:$retrofitVersion",
+            retrofitgson:"com.squareup.retrofit:converter-gson:$retrofitVersion",
+            retrofitrxjava:"com.squareup.retrofit:adapter-rxjava:$retrofitVersion"
+    ]
 
 }
