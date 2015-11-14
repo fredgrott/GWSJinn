@@ -68,7 +68,7 @@ ext {
     androidCompileSdkVersion = 23
 
     //android support libs
-    androidSupportVersion = '23.1.0'
+    androidSupportVersion = '23.1.1'
 
     androidSupportDependencies = [
 
