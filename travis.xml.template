@@ -10,6 +10,9 @@ jdk:
 
 env:
     # sysimg gets listed as specified in the android components sub block
+    # block used so that we created all the avds at once
+    # note: google has not made available full distro of google_api addons fro
+    # x86 hence we are using arm for now
     matrix:
         - ANDROID_SDKS=android-16,sys-img-armeabi-v7a-addon-google_apis-google-16 ANDROID_TARGET=android-16 ANDROID_ABI=armeabi-v7a
         - ANDROID_SDKS=android-17,sys-img-armeabi-v7a-addon-google_apis-google-17 ANDROID_TARGET=android-17 ANDROID_ABI=armeabi-v7a
@@ -45,6 +48,7 @@ android:
        # sdk version to compile project with
        - android-23
        # extras
+       # do we need to specify version at end of line here?
        - extra-google-m2repository
        - extra-android-m2repository
        - extra-android-support
@@ -91,5 +95,7 @@ script:
   #    ./gradlew spoonMock
   # with library module its
   # ./gradlew build
+  # non flavor app modules can run:
+  # ./gradlew spoon
   - ./gradlew spoon
 
