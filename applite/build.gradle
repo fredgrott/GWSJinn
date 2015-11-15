@@ -1,0 +1,334 @@
+/*
+Copyright (C) 2015 Fred Grott(aka shareme GrottWorkShop)
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
+compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is
+distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under License.
+ */
+apply plugin: 'com.android.application'
+apply plugin: 'de.hannesstruss.godot'
+apply plugin: 'hugo'
+apply plugin: 'spoon'
+apply plugin: 'org.moallemi.advanced-build-version'
+apply plugin: 'com.neenbedankt.android-apt'
+
+advancedVersioning {
+    nameOptions {
+        versionMajor 1
+        versionBuild 0
+    }
+    codeOptions {
+        versionCodeType org.moallemi.gradle.internal.VersionCodeType.DATE
+
+        dependsOnTasks 'release'
+
+    }
+    //if flavors than re use nameFormat to include the flavorName
+    outputOptions {
+        renameOutput true
+        nameFormat '$projectName-$appName-$buildType-$flavorName-$versionName-$versionCode'
+
+    }
+}
+
+def appVersionName = advancedVersioning.versionName
+def appVersionCode = advancedVersioning.versionCode
+
+// for lombok
+def srcJava = 'src/main/java'
+def srcDelomboked = 'build/src-delomboked/main/java'
+
+android {
+
+    /*
+    Sets-up a sharedTest folder to store test code that can
+    be shared between test, androidTest, and androidTestMock
+     */
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+        androidTestMock {
+            java.srcDir sharedTestDir
+        }
+    }
+
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+
+
+    compileSdkVersion globalConfiguration.getAt("androidCompileSdkVersion")
+    buildToolsVersion globalConfiguration.getAt("androidBuildToolsVersion")
+
+
+    defaultConfig {
+        applicationId "com.github.shareme.applite"
+        minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
+        targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
+        versionCode appVersionCode
+        versionName appVersionName
+        testInstrumentationRunner globalConfiguration.getAt("testInstrumentationRunner")
+        testApplicationId globalConfiguration.getAt("testApplicationId")
+
+    }
+
+    /*
+     Warning, multi-catch is not until android 4.4.2
+     */
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError false
+        ignoreWarnings true
+        xmlReport false
+        htmlReport true
+        lintConfig file("${project.rootDir}/config/quality/androidlint/lint.xml")
+        htmlOutput file("${project.buildDir}/reports/lint/lint-results.html")
+        xmlOutput file("${rootProject.buildDir}/reports/lint/lint-results.xml")
+        disable 'InvalidPackage'            //Some libraries have issues with this.
+        disable 'OldTargetApi'              //Lint gives this warning but SDK 20 would be Android L Beta.
+        disable 'IconDensities'             //For testing purpose. This is safe to remove.
+        disable 'IconMissingDensityFolder'  //For testing purpose. This is safe to remove.
+    }
+
+    aaptOptions {
+        noCompress 'txt'
+        ignoreAssetsPattern "!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }
+
+    signingConfigs {
+
+        //release {
+        //props stored in gradle.properties at userhome .gradle subfolder
+        // for product release and you just substitute the correct vars
+        // otherwise for demo of libs use what is listed
+
+        //storeFile file(FREDGROTT_RELEASE_STORE_FILE)
+        //storePassword FREDGROTT_RELEASE_STORE_PASSWORD
+        //keyAlias FREDGROTT_RELEASE_KEY_ALIAS
+        //keyPassword FREDGROTT_RELEASE_KEY_PASSWORD
+
+        // }
+
+        myDemo{
+            storeFile file('../buildsystem/demokey.jks')
+            storePassword 'droiddroid'
+            keyAlias 'dkey'
+            keyPassword 'droiddroid'
+        }
+
+    }
+
+
+
+
+    buildTypes {
+        debug {
+            // Run code coverage reports by default on debug builds.
+            debuggable true
+            minifyEnabled false
+            testCoverageEnabled true
+            applicationIdSuffix '.dev'
+            versionNameSuffix '-dev'
+
+
+        }
+
+
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-matches-android-optimize.pro'
+            //if its app demo of library than it gets
+            //signingConfig signingConfigs.myDemo
+            //other wise it gets an uncommented signingConfigs.release
+            //with the right product key pertaining to whether its on the Ci server or not
+            signingConfig signingConfigs.myDemo
+            applicationIdSuffix '.release'
+            versionNameSuffix '-release'
+
+
+
+
+
+        }
+    }
+
+    // Always show the result of every unit test, even if it passes.
+    testOptions{
+        reportDir = "$rootProject.ext.ourReportsDir/androidTests"
+
+        unitTests.all {
+            testLogging {
+                events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+            }
+        }
+    }
+}
+//noinspection GroovyMissingReturnStatement
+spoon {
+
+    debug = true
+
+    baseOutputDir = file("$rootProject.ext.ourReportsDir/spoon")
+
+    if (project.hasProperty('spoonClassName')) {
+        className = project.spoonClassName
+
+        if (project.hasProperty('spoonMethodName')) {
+            methodName = project.spoonMethodName
+        }
+    }
+
+}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile rootProject.ext.acceptanceTestingDependencies.junit
+    testCompile rootProject.ext.acceptanceTestingDependencies.mockito
+    testCompile rootProject.ext.acceptanceTestingDependencies.powermockJunit
+    testCompile rootProject.ext.acceptanceTestingDependencies.powermockMockito
+    testCompile rootProject.ext.acceptanceTestingDependencies.assertjCore
+
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoRunner
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoRules
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoCore
+    androidTestCompile (rootProject.ext.instrumentedTestDependencies.espressoContrib){
+        exclude module: 'recyclerview-v7'
+        exclude module: 'support-v4'
+
+    }
+    androidTestCompile (rootProject.ext.instrumentedTestDependencies.assertjAndroid){
+        exclude group: 'com.android.support'
+    }
+    androidTestCompile (rootProject.ext.instrumentedTestDependencies.assertjAppCompat){
+        exclude group: 'com.android.support'
+    }
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.spoonClient
+    androidTestCompile rootProject.ext.instrumentedTestDependencies.gwsdroidinsutil
+
+    compile rootProject.ext.androidSupportDependencies.appCompat
+    compile rootProject.ext.debugAppDependencies.timber
+    compile rootProject.ext.debugAppDependencies.leakcanaryAndroidNOOPRC
+
+    debugCompile rootProject.ext.debugAppDependencies.leakcanaryAndroidDC
+    debugCompile rootProject.ext.debugAppDependencies.dbinspector
+    debugCompile rootProject.ext.debugAppDependencies.gwsdroidviewserver
+    //debugCompile rootProject.ext.debugAppDependencies.gwswakeup
+
+    apt rootProject.ext.lombokDependencies.lombok
+    provided rootProject.ext.lombokDependencies.lombok
+
+
+
+
+
+
+}
+//uncomment to enable
+// androidTest gets a class named SystemAnimations and animations disabled and enabled within
+// the ApplicationTest setUp and tearDown
+// an AndroidManifest.xml stripped of its application tag is
+task grantAnimationPermission(type: Exec, dependsOn: 'installDebug') { // or install{productFlavour}{buildType}
+    commandLine "adb shell pm grant $android.defaultConfig.testApplicationId android.permission.SET_ANIMATION_SCALE".split(' ')
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('connectedAndroidTest')) {
+        task.dependsOn grantAnimationPermission
+    }
+}
+
+//for lombok
+task delombok {
+    inputs.files file(srcJava)
+    outputs.dir file(srcDelomboked)
+
+    doLast {
+        FileCollection collection = files(configurations.compile)
+        FileCollection sumTree = collection + fileTree(dir: 'bin')
+
+        ant.taskdef(name: 'delombok', classname: 'lombok.delombok.ant.DelombokTask', classpath: 'delombok_lib/lombok-1.16.6.jar')
+        ant.delombok(from:srcJava, to:srcDelomboked, classpath: sumTree.asPath)
+    }
+}
+
+def findClasses(File path)
+{
+    List<File> found = new ArrayList<File>();
+
+    for (File file : path.listFiles())
+    {
+        if (file.getName().equalsIgnoreCase("classes.jar"))
+        {
+            found.add(file);
+        }
+
+        if (file.isDirectory())
+        {
+            found.addAll(findClasses(file));
+        }
+    }
+
+    return found;
+}
+
+/*
+ In our javadoc for loombok we only want android.applicationVariants the prod
+ gradle product flavour only and only the release build type
+ */
+android.applicationVariants.all { variant ->
+    if(variant.buildType.name.equals('release')
+            && variant.name.contains('prod')){
+        task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+            description "Generates Javadoc for $variant.name."
+
+            setDependsOn(['build', 'delombok'])
+            source = srcDelomboked
+            ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+            classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+
+            List<String> jars = new ArrayList<String>();
+            File dependencies = new File("build/intermediates/exploded-aar/")
+            for (File folder : dependencies.listFiles())
+            {
+                List<File> found = findClasses(folder);
+                for (File foundFile : found)
+                {
+                    classpath += files(foundFile.getAbsolutePath())
+                }
+            }
+
+
+            options.links("http://docs.oracle.com/javase/7/docs/api/");
+            options.linksOffline("http://d.android.com/reference", "${android.sdkDirectory}/docs/reference");
+
+            // exclude generated files
+            exclude '**/BuildConfig.java'
+            exclude '**/R.java'
+
+
+        }
+    }
+}
